@@ -1,4 +1,3 @@
-=========================
 CARMA Ouster Lidar Driver
 =========================
 
@@ -69,7 +68,6 @@ Examples
 
 See the ``ouster.launch`` file in the ``ouster_ros`` directory.
 
-===================================
 Original Ouster Lidar Documentation
 ===================================
 

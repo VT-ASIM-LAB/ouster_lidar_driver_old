@@ -27,6 +27,8 @@
     <remap from="~/os_config" to="/os_node/os_config"/>
     <remap from="~/lidar_packets" to="/os_node/lidar_packets"/>
     <remap from="~/imu_packets" to="/os_node/imu_packets"/>
+    <remap from="~/points" to="/hardware_interface/lidar/points_raw"/>
+    <remap from="~/discovery" to="/hardware_interface/driver_discovery"/>
     <param name="~/tf_prefix" value="$(arg tf_prefix)"/>
   </node>
 

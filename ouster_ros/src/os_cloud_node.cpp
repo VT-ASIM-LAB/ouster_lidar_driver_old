@@ -9,7 +9,7 @@
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/PointCloud2.h>
 #include <tf2_ros/static_transform_broadcaster.h>
-
+#include <cav_msgs/DriverStatus.h>
 #include <algorithm>
 #include <chrono>
 #include <memory>
@@ -23,27 +23,43 @@
 using PacketMsg = ouster_ros::PacketMsg;
 using Cloud = ouster_ros::Cloud;
 using Point = ouster_ros::Point;
+
 namespace sensor = ouster::sensor;
 
 int main(int argc, char** argv) {
+    
     ros::init(argc, argv, "os_cloud_node");
     ros::NodeHandle nh("~");
 
     auto tf_prefix = nh.param("tf_prefix", std::string{});
+    
     if (!tf_prefix.empty() && tf_prefix.back() != '/') tf_prefix.append("/");
-    auto sensor_frame = tf_prefix + "os_sensor";
+    
+    auto sensor_frame = tf_prefix + "velodyne";
     auto imu_frame = tf_prefix + "os_imu";
     auto lidar_frame = tf_prefix + "os_lidar";
 
+    cav_msgs::DriverStatus discovery_msg;
+
+    discovery_msg.name = "/hardware_interface/lidar";
+    discovery_msg.lidar = true;
+
     ouster_ros::OSConfigSrv cfg{};
+
     auto client = nh.serviceClient<ouster_ros::OSConfigSrv>("os_config");
+
     client.waitForExistence();
+
     if (!client.call(cfg)) {
+        
         ROS_ERROR("Calling config service failed");
+        discovery_msg.status = cav_msgs::DriverStatus::FAULT;
         return EXIT_FAILURE;
+
     }
 
     auto info = sensor::parse_metadata(cfg.response.metadata);
+
     uint32_t H = info.format.pixels_per_column;
     uint32_t W = info.format.columns_per_frame;
 
@@ -51,24 +67,39 @@ int main(int argc, char** argv) {
 
     auto lidar_pub = nh.advertise<sensor_msgs::PointCloud2>("points", 10);
     auto imu_pub = nh.advertise<sensor_msgs::Imu>("imu", 100);
+    auto discovery_pub = nh.advertise<cav_msgs::DriverStatus>("discovery", 10);
 
     auto xyz_lut = ouster::make_xyz_lut(info);
 
     Cloud cloud{W, H};
-    ouster::LidarScan ls{W, H};
 
+    ouster::LidarScan ls{W, H};
     ouster::ScanBatcher batch(W, pf);
 
+    ros::Time last_discovery_pub = ros::Time::now();
+
     auto lidar_handler = [&](const PacketMsg& pm) mutable {
+        
         if (batch(pm.buf.data(), ls)) {
+            
             auto h = std::find_if(
                 ls.headers.begin(), ls.headers.end(), [](const auto& h) {
                     return h.timestamp != std::chrono::nanoseconds{0};
                 });
+
             if (h != ls.headers.end()) {
+                
                 scan_to_cloud(xyz_lut, h->timestamp, ls, cloud);
+                
                 lidar_pub.publish(ouster_ros::cloud_to_cloud_msg(
-                    cloud, h->timestamp, sensor_frame));
+                    cloud, sensor_frame));
+		        discovery_msg.status = cav_msgs::DriverStatus::OPERATIONAL;
+            }
+
+            if (last_discovery_pub == ros::Time(0) || (ros::Time::now() - last_discovery_pub).toSec() > 0.8) {
+                
+                discovery_pub.publish(discovery_msg);
+                last_discovery_pub = ros::Time::now();
             }
         }
     };

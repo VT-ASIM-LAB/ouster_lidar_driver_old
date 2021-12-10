@@ -73,10 +73,6 @@ Original Ouster Lidar Documentation
 
 :Description: Sample code provided for working with Ouster sensors
 
-.. contents:: Contents:
-   :local:
-
-
 Summary
 =======
 

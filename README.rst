@@ -37,7 +37,7 @@ Finally, add the following lines to the ``drivers.launch`` file in the same dire
       <arg name="metadata" value="/opt/carma/vehicle/calibration/ouster/OS1-64U.json"/>
     </include>
 
-``10.5.5.53`` should be replaced with the IP address of your lidar sensor and the ``metadata`` field should be populated with the appropriate metadata file for your sensor (here the metadata is for an Ouster 64-beam Uniform lidar sensor). See `this guide <https://github.com/SteveMacenski/ouster_ros1>`_ for more details.
+``10.5.5.53`` should be replaced with the IP address of your lidar sensor and the ``metadata`` field should be populated with the appropriate metadata file for your sensor (here the metadata is for an Ouster OS1-64 64-beam Uniform lidar sensor). See `this guide <https://github.com/SteveMacenski/ouster_ros1>`_ for more details.
 
 ROS API (stable)
 ================
@@ -66,7 +66,7 @@ Parameters
 
 Examples
 ========
-See the ``ouster.launch`` file in the ``ouster_ros`` directory.
+See the ``ouster.launch`` file in the ``ouster_ros`` directory that is used to launch an Ouster OS1-64 64-beam Uniform lidar sensor.
 
 
 Original Ouster Documentation

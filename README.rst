@@ -1,6 +1,6 @@
-#########################
-CARMA Ouster Lidar Driver
-#########################
+##############################
+Ouster Lidar Driver for CARMA
+##############################
 
 This is a fork of the `Ouster Example Code <https://github.com/ouster-lidar/ouster_example>`_ that is used for connecting to and configuring Ouster sensors, reading and visualizing data, and interfacing with ROS. This fork has been modified to allow for building a Docker image that can serve as a lidar driver for the `CARMA Platform <https://github.com/usdot-fhwa-stol/carma-platform>`_.
 

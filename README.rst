@@ -38,7 +38,7 @@ Finally, add the following lines to the ``drivers.launch`` file in the same dire
       <arg name="viz" value="false"/>
     </include>
 
-Here it is assumed that the IP address of the host computer is ``10.5.5.1``. ``10.5.5.53`` should be replaced with the IP address of your lidar sensor and the ``metadata`` field should be populated with the appropriate metadata file for your sensor (here the metadata is for an `Ouster OS1-64U <https://ouster.com/products/scanning-lidar/os1-sensor/>`_ 64-beam uniform lidar sensor). See `this guide <https://github.com/SteveMacenski/ouster_ros1>`_ for more details.
+Here it is assumed that ``10.5.5.1`` is the assigned static IP address of the host computer. ``10.5.5.53`` should be replaced with the IP address of your lidar sensor and the ``metadata`` field should be populated with the appropriate metadata file for your sensor (here the metadata is for an `Ouster OS1-64U <https://ouster.com/products/scanning-lidar/os1-sensor/>`_ 64-beam uniform lidar sensor). See `this guide <https://github.com/SteveMacenski/ouster_ros1>`_ for more details.
 
 ROS API
 =======
@@ -69,9 +69,9 @@ Publication frequencies are given for an `Ouster OS1-64U <https://ouster.com/pro
 
 Subscribed Topics
 ^^^^^^^^^^^^^^^^^
-* ``os_node/lidar_packets [ouster_ros/PacketMsg]``: ``os_cloud_node`` subscribes to this topic.
-* ``os_node/imu_packets [ouster_ros/PacketMsg]``: ``os_cloud_node`` subscribes to this topic.
-* ``os_cloud_node/points [sensor_msgs/PointCloud2]``: ``img_node`` subscribes to this topic.
+* ``os_node/lidar_packets [ouster_ros/PacketMsg]``: ``os_cloud_node`` subscribes to this topic to receive lidar packets.
+* ``os_node/imu_packets [ouster_ros/PacketMsg]``: ``os_cloud_node`` subscribes to this topic to receive IMU packets.
+* ``os_cloud_node/points [sensor_msgs/PointCloud2]``: ``img_node`` subscribes to this topic to receive the created point cloud.
 
 Services
 ^^^^^^^^
@@ -80,7 +80,7 @@ Services
 Parameters
 ^^^^^^^^^^
 * ``os_node/imu_port``: port to which the sensor should send imu data.
-* ``os_node/lidar_mode``: lidar horizontal resolution and rotation rate: either 512x10, 512x20, 1024x10, 1024x20, or 2048x10.
+* ``os_node/lidar_mode``: lidar horizontal resolution and rotation rate: either ``512x10``, ``512x20``, ``1024x10``, ``1024x20``, or ``2048x10``.
 * ``os_node/lidar_port``: port to which the sensor should send lidar data.
 * ``os_node/metadata``: path to read or write metadata file when replaying or receiving sensor data, respectively.
 * ``os_node/replay``: do not connect to a sensor; expect ``/os_node/{lidar,imu}_packets`` from replay.
@@ -210,7 +210,7 @@ and write point clouds out to CSV files::
     ./ouster_client_example <sensor hostname> <udp data destination>
 
 where ``<sensor hostname>`` can be the hostname (os-99xxxxxxxxxx) or IP of the sensor and ``<udp
-data destingation>`` is the hostname or IP to which the sensor should send lidar data. You can also
+data destination>`` is the hostname or IP to which the sensor should send lidar data. You can also
 supply ``""``, an empty string, to utilize automatic detection.
 
 On Windows, you may need to allow the client/visualizer through the Windows firewall to receive
@@ -225,7 +225,7 @@ Navigate to ``ouster_viz`` under the build directory, which should contain an ex
     ./simple_viz [flags] <sensor hostname> [udp data destination]
 
 where ``<sensor hostname>`` can be the hostname (os-99xxxxxxxxxx) or IP of the sensor and ``[udp
-data destingation]`` is an optional hostname or IP to which the sensor should send lidar data.
+data destination]`` is an optional hostname or IP to which the sensor should send lidar data.
 
 The sample visualizer does not currently include a GUI, but can be controlled with the mouse and
 keyboard:

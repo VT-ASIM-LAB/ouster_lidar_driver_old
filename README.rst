@@ -38,10 +38,10 @@ Finally, add the following lines to the ``drivers.launch`` file in the same dire
       <arg name="viz" value="false"/>
     </include>
 
-``10.5.5.53`` should be replaced with the IP address of your lidar sensor and the ``metadata`` field should be populated with the appropriate metadata file for your sensor (here the metadata is for an Ouster OS1-64 64-beam Uniform lidar sensor). See `this guide <https://github.com/SteveMacenski/ouster_ros1>`_ for more details.
+Here it is assumed that the IP address of the host computer is ``10.5.5.1``. ``10.5.5.53`` should be replaced with the IP address of your lidar sensor and the ``metadata`` field should be populated with the appropriate metadata file for your sensor (here the metadata is for an `Ouster OS1-64U <https://ouster.com/products/scanning-lidar/os1-sensor/>`_ 64-beam uniform lidar sensor). See `this guide <https://github.com/SteveMacenski/ouster_ros1>`_ for more details.
 
-ROS API (stable)
-================
+ROS API
+=======
 
 ouster_ros
 ----------
@@ -53,7 +53,9 @@ Nodes
 * ``img_node``
 
 Published Topics
-^^^^^^
+^^^^^^^^^^^^^^^^
+Publication frequencies are given for an `Ouster OS1-64U <https://ouster.com/products/scanning-lidar/os1-sensor/>`_ 64-beam uniform lidar sensor.
+
 * ``os_node/lidar_packets [ouster_ros/PacketMsg]``: publishes lidar packets received from the sensor.
 * ``os_node/imu_packets [ouster_ros/PacketMsg]``: publishes IMU packets received from the sensor (100 Hz).
 * ``os_cloud_node/points [sensor_msgs/PointCloud2]``: publishes the point cloud obtained from one sensor rotation (10 or 20 Hz).
@@ -66,7 +68,7 @@ Published Topics
 * ``tf_static [tf2_msgs/TFMessage]``: publishes the relationship between child frames ``os_imu`` and ``os_lidar`` and their parent frame ``velodyne`` (originally ``os_sensor``).
 
 Subscribed Topics
-^^^^^^
+^^^^^^^^^^^^^^^^^
 * ``os_node/lidar_packets [ouster_ros/PacketMsg]``: ``os_cloud_node`` subscribes to this topic.
 * ``os_node/imu_packets [ouster_ros/PacketMsg]``: ``os_cloud_node`` subscribes to this topic.
 * ``os_cloud_node/points [sensor_msgs/PointCloud2]``: ``img_node`` subscribes to this topic.
@@ -90,7 +92,7 @@ Parameters
 
 Examples
 ========
-See the ``ouster.launch`` file in the ``ouster_ros`` directory that is used to launch an Ouster OS1-64 64-beam Uniform lidar sensor.
+See the ``ouster.launch`` file in the ``ouster_ros`` directory that is used to launch an `Ouster OS1-64U <https://ouster.com/products/scanning-lidar/os1-sensor/>`_ 64-beam uniform lidar sensor.
 
 
 Original Ouster Documentation

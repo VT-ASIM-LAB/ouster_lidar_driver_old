@@ -56,16 +56,16 @@ Published Topics
 ^^^^^^^^^^^^^^^^
 Publication frequencies are given for an `Ouster OS1-64U <https://ouster.com/products/scanning-lidar/os1-sensor/>`_ 64-beam uniform lidar sensor.
 
-* ``os_node/lidar_packets [ouster_ros/PacketMsg]``: publishes lidar packets received from the sensor.
+* ``os_node/lidar_packets [ouster_ros/PacketMsg]``: publishes lidar packets received from the sensor (640 Hz).
 * ``os_node/imu_packets [ouster_ros/PacketMsg]``: publishes IMU packets received from the sensor (100 Hz).
 * ``os_cloud_node/points [sensor_msgs/PointCloud2]``: publishes the point cloud obtained from one sensor rotation (10 or 20 Hz).
 * ``os_cloud_node/imu [sensor_msgs/Imu]``: publishes the IMU data obtained from the sensor (100 Hz).
 * ``os_cloud_node/discovery [cav_msgs/DriverStatus]``: publishes the CARMA `DriverStatus <https://github.com/usdot-fhwa-stol/carma-msgs/blob/develop/cav_msgs/msg/DriverStatus.msg>`_ message (1.25 Hz).
 * ``img_node/nearir_image [sensor_msgs/Image]``: publishes the point cloud of received `near infrared photons <https://data.ouster.io/downloads/software-user-manual/software-user-manual-v2.1.x.pdf>`_ (related to natural environment illumination) as a 2D (horizontal resolution x number of beams) image (10 or 20 Hz).
 * ``img_node/range_image [sensor_msgs/Image]``: publishes the point cloud of received `range information <https://data.ouster.io/downloads/software-user-manual/software-user-manual-v2.1.x.pdf>`_ as a 2D (horizontal resolution x number of beams) image (10 or 20 Hz).
-* ``img_node/reflec_image [sensor_msgs/Image]``: publishes the point cloud of `calculated calibrated reflectivity <https://data.ouster.io/downloads/software-user-manual/software-user-manual-v2.1.x.pdf>`_ as a 2D (horizontal resolution x number of beams) image (10 or 20 Hz).
+* ``img_node/reflec_image [sensor_msgs/Image]``: publishes the point cloud of calculated `calibrated reflectivity <https://data.ouster.io/downloads/software-user-manual/software-user-manual-v2.1.x.pdf>`_ as a 2D (horizontal resolution x number of beams) image (10 or 20 Hz).
 * ``img_node/signal_image [sensor_msgs/Image]``: publishes the point cloud of received `signal intensity photons <https://data.ouster.io/downloads/software-user-manual/software-user-manual-v2.1.x.pdf>`_ as a 2D (horizontal resolution x number of beams) image (10 or 20 Hz).
-* ``tf_static [tf2_msgs/TFMessage]``: publishes the relationship between child frames ``os_imu`` and ``os_lidar`` and their parent frame ``velodyne`` (originally ``os_sensor``).
+* ``tf_static [tf2_msgs/TFMessage]``: publishes the relationship of child frames ``os_imu`` and ``os_lidar`` with their parent frame ``velodyne`` (originally ``os_sensor``, changed for compatibility with CARMA).
 
 Subscribed Topics
 ^^^^^^^^^^^^^^^^^
@@ -75,7 +75,7 @@ Subscribed Topics
 
 Services
 ^^^^^^^^
-* ``os_node/os_config [ouster_ros/OSConfigSrv]``: sets the sensor configuration.
+* ``os_node/os_config [ouster_ros/OSConfigSrv]``: sets sensor metadata.
 
 Parameters
 ^^^^^^^^^^
@@ -83,11 +83,11 @@ Parameters
 * ``os_node/lidar_mode``: lidar horizontal resolution and rotation rate: either 512x10, 512x20, 1024x10, 1024x20, or 2048x10.
 * ``os_node/lidar_port``: port to which the sensor should send lidar data.
 * ``os_node/metadata``: path to read or write metadata file when replaying or receiving sensor data, respectively.
-* ``os_node/replay``: do not connect to a sensor; expect /os_node/{lidar,imu}_packets from replay.
+* ``os_node/replay``: do not connect to a sensor; expect ``/os_node/{lidar,imu}_packets`` from replay.
 * ``os_node/sensor_hostname``: hostname or IP of the sensor in dotted decimal form.
 * ``os_node/timestamp_mode``: method used to timestamp measurements: TIME_FROM_INTERNAL_OSC, TIME_FROM_SYNC_PULSE_IN, TIME_FROM_PTP_1588.
 * ``os_node/udp_dest``: hostname or IP where the sensor will send data packets.
-* ``os_cloud_node/tf_prefix``: namespace for TF2 transforms.
+* ``os_cloud_node/tf_prefix``: namespace for `TF2 <http://wiki.ros.org/tf2>`_ transforms.
 
 
 Examples

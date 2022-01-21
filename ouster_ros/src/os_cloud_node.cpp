@@ -106,10 +106,17 @@ int main(int argc, char** argv) {
 
             if (h != ls.headers.end()) {
                 for (int i = 0; i < n_returns; i++) {
+                    
                     scan_to_cloud(xyz_lut, h->timestamp, ls, cloud, i);
                     lidar_pubs[i].publish(ouster_ros::cloud_to_cloud_msg(
-                        cloud, h->timestamp, sensor_frame));
+                        cloud, sensor_frame));
                 }
+            }
+
+            if (last_discovery_pub == ros::Time(0) || (ros::Time::now() - last_discovery_pub).toSec() > 0.8) {
+                
+                discovery_pub.publish(discovery_msg);
+                last_discovery_pub = ros::Time::now();
             }
         }
     };

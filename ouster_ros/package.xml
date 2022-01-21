@@ -2,8 +2,8 @@
 <package format="2">
   <name>ouster_ros</name>
   <version>0.3.0</version>
-  <description>Ouster example ROS client</description>
-  <maintainer email="oss@ouster.io">ouster developers</maintainer>
+  <description>Ouster ROS client for CARMA</description>
+  <maintainer email="goodarzm@vt.edu">Goodarz Mehr</maintainer>
   <license>BSD</license>
   <buildtool_depend>catkin</buildtool_depend>
 

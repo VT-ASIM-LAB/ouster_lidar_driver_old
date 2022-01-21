@@ -62,15 +62,32 @@ int main(int argc, char** argv) {
 
     uint32_t H = info.format.pixels_per_column;
     uint32_t W = info.format.columns_per_frame;
+    auto udp_profile_lidar = info.format.udp_profile_lidar;
 
+    const int n_returns =
+        (udp_profile_lidar == sensor::UDPProfileLidar::PROFILE_LIDAR_LEGACY)
+            ? 1
+            : 2;
     auto pf = sensor::get_format(info);
 
-    auto lidar_pub = nh.advertise<sensor_msgs::PointCloud2>("points", 10);
     auto imu_pub = nh.advertise<sensor_msgs::Imu>("imu", 100);
     auto discovery_pub = nh.advertise<cav_msgs::DriverStatus>("discovery", 10);
 
+    auto img_suffix = [](int ind) {
+        if (ind == 0) return std::string();
+        return std::to_string(ind + 1);  // need second return to return 2
+    };
+
+    auto lidar_pubs = std::vector<ros::Publisher>();
+    for (int i = 0; i < n_returns; i++) {
+        auto pub = nh.advertise<sensor_msgs::PointCloud2>(
+            std::string("points") + img_suffix(i), 10);
+        lidar_pubs.push_back(pub);
+    }
+
     auto xyz_lut = ouster::make_xyz_lut(info);
 
+    ouster::LidarScan ls{W, H, udp_profile_lidar};
     Cloud cloud{W, H};
 
     ouster::LidarScan ls{W, H};
@@ -88,18 +105,11 @@ int main(int argc, char** argv) {
                 });
 
             if (h != ls.headers.end()) {
-                
-                scan_to_cloud(xyz_lut, h->timestamp, ls, cloud);
-                
-                lidar_pub.publish(ouster_ros::cloud_to_cloud_msg(
-                    cloud, sensor_frame));
-		        discovery_msg.status = cav_msgs::DriverStatus::OPERATIONAL;
-            }
-
-            if (last_discovery_pub == ros::Time(0) || (ros::Time::now() - last_discovery_pub).toSec() > 0.8) {
-                
-                discovery_pub.publish(discovery_msg);
-                last_discovery_pub = ros::Time::now();
+                for (int i = 0; i < n_returns; i++) {
+                    scan_to_cloud(xyz_lut, h->timestamp, ls, cloud, i);
+                    lidar_pubs[i].publish(ouster_ros::cloud_to_cloud_msg(
+                        cloud, h->timestamp, sensor_frame));
+                }
             }
         }
     };
